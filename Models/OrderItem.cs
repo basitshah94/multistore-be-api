@@ -15,6 +15,7 @@ namespace multi_store.Models
         public int Price  { get; set; }
         public int Quantity { get; set; }
         public int TotalAmount { get; set; }
+        public long OrderId {get; set;}
         [JsonIgnore]
         public virtual Order Order {get;set;}
     }

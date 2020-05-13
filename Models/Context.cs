@@ -24,6 +24,8 @@ namespace multi_store.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<Classification> Classifications { get; set; }
         public DbSet<Group> Groups { get; set; }
+        public DbSet<Shop> Shops { get; set; }
+        public DbSet<Image> Images { get; set; }
        
             // public DbSet<UserAuthentication> UserAuthentication { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -46,6 +48,22 @@ namespace multi_store.Models
               Title = "Service_Consumer"
           }
         );
+
+         modelBuilder.Entity<Shop>()
+                            .Property(r => r.IsVerified)
+                            .HasConversion(new BoolToZeroOneConverter<Int16>());
+
+         modelBuilder.Entity<Shop>()
+                            .Property(r => r.IsDisabled)
+                            .HasConversion(new BoolToZeroOneConverter<Int16>());
+
+         modelBuilder.Entity<Product>()
+                            .Property(r => r.IsDisabled)
+                            .HasConversion(new BoolToZeroOneConverter<Int16>());
+
+         modelBuilder.Entity<Product>()
+                            .Property(r => r.IsAllowed)
+                            .HasConversion(new BoolToZeroOneConverter<Int16>());
         }
 
     }

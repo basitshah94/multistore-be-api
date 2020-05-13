@@ -1,3 +1,6 @@
+
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace multi_store.Models

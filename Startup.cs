@@ -40,6 +40,7 @@ namespace multi_store
             {
                 options.SwaggerDoc("v1" , new OpenApiInfo {Title="myApi" , Version = "v1"});
             });
+             services.AddCors();
              
         }
 
@@ -67,7 +68,18 @@ namespace multi_store
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+             app.UseCors(builder =>
+            {
+                builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            });
+
+           // app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+                RequestPath = new PathString("/Resources")
+            });
             app.UseMvc();
         }
     }

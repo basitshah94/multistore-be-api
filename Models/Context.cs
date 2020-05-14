@@ -64,6 +64,19 @@ namespace multi_store.Models
          modelBuilder.Entity<Product>()
                             .Property(r => r.IsAllowed)
                             .HasConversion(new BoolToZeroOneConverter<Int16>());
+                            
+        modelBuilder.Entity<Product>()
+                            .Property(r => r.IsOutOfStock)
+                            .HasConversion(new BoolToZeroOneConverter<Int16>());
+        
+        modelBuilder.Entity<Product>()
+                            .Property(r => r.IsNew)
+                            .HasConversion(new BoolToZeroOneConverter<Int16>());
+
+        modelBuilder.Entity<Order>()
+                            .Property(r => r.IsSelfPick)
+                            .HasConversion(new BoolToZeroOneConverter<Int16>());
+                            
         }
 
     }

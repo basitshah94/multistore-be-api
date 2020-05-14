@@ -24,14 +24,14 @@ namespace multi_store.Controllers
         [HttpGet]
          public async Task<ActionResult<IEnumerable<Product>>> GetAll()
         {
-            return await _db.Products.ToListAsync();
+            return await _db.Products.Include(x=>x.Images).Include(x=>x.Classification).ThenInclude(x=>x.Category).ThenInclude(x=>x.Group).ToListAsync();
         }
 
         // GET api/product/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetSingle(long id)
         {
-            var product = await _db.Products.Include(x=>x.Images).FirstOrDefaultAsync(x => x.Id == id);
+            var product = await _db.Products.Include(x=>x.Images).Include(x=>x.Classification).ThenInclude(x=>x.Category).ThenInclude(x=>x.Group).FirstOrDefaultAsync(x => x.Id == id);
             if (product == null)
                 return NotFound();
 
@@ -43,19 +43,6 @@ namespace multi_store.Controllers
         public async Task<ActionResult<Product>> Post(Product product)
         {
             _db.Products.Update(product);
-            // Image image = new Image();
-            // var productImages = product.Images.ToList();
-            // foreach(var img in productImages)
-            // {
-            //  image.ProductId = product.Id;
-            //  image.Path = img.Path;
-            //  _db.Add(image);
-            // }
-            foreach(var img in product.Images) // temporary send images with productid 0
-            {
-             img.ProductId = product.Id;
-             _db.Add(img);
-            }
             
             await _db.SaveChangesAsync();
 

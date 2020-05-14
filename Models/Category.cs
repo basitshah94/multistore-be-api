@@ -11,7 +11,6 @@ namespace multi_store.Models
 		public string Thumnail { get; set; }
 		public string Banner { get; set; }
 		public long GroupId { get; set; }
-         [JsonIgnore]
-        public  Group group { get; set; }	
+        public virtual  Group Group { get; set; }	
 	}
 }

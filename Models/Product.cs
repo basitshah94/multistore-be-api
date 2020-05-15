@@ -12,6 +12,8 @@ namespace multi_store.Models
         public string Description { get; set; }
         public int Price { get; set; }
         public string ProductCode {get; set;}
+        public string ProductDetail {get; set;}
+        public int? Discount{get; set;}
         public int? Quantity {get; set;}
         public float? weight { get; set; }
         public string Unit { get; set; }
@@ -20,6 +22,7 @@ namespace multi_store.Models
         public bool? IsAllowed { get; set; } // for Admin
         public bool? IsOutOfStock {get; set;}
         public bool? IsNew {get; set;}
+        public bool? IsSale {get; set;}
         public virtual ICollection<Image> Images { get; set; }
         public long ClassificationId { get; set; }
         //  [JsonIgnore]

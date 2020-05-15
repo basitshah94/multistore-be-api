@@ -21,6 +21,8 @@ public class Shop
 	public string OwnerCNiC {get; set;}
 	public bool? IsVerified { get; set; }
 	public bool? IsDisabled { get; set; }
+	public virtual ICollection<Product> Products { get; set; }
+	
 }	
 
 }

@@ -73,6 +73,10 @@ namespace multi_store.Models
                             .Property(r => r.IsNew)
                             .HasConversion(new BoolToZeroOneConverter<Int16>());
 
+        modelBuilder.Entity<Product>()
+                            .Property(r => r.IsSale)
+                            .HasConversion(new BoolToZeroOneConverter<Int16>());
+
         modelBuilder.Entity<Order>()
                             .Property(r => r.IsSelfPick)
                             .HasConversion(new BoolToZeroOneConverter<Int16>());

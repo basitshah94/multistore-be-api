@@ -3,9 +3,9 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using multi_store.Models;
+using dotnet.Models;
 
-namespace multi_store.Migrations
+namespace dotnet.Migrations
 {
     [DbContext(typeof(Context))]
     partial class ContextModelSnapshot : ModelSnapshot
@@ -14,9 +14,31 @@ namespace multi_store.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
 
-            modelBuilder.Entity("multi_store.Models.Category", b =>
+            modelBuilder.Entity("dotnet.Models.Account", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccountType");
+
+                    b.Property<string>("CNIC");
+
+                    b.Property<short?>("IsVerified");
+
+                    b.Property<string>("MSISDN");
+
+                    b.Property<long>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("dotnet.Models.Category", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -38,7 +60,7 @@ namespace multi_store.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("multi_store.Models.Classification", b =>
+            modelBuilder.Entity("dotnet.Models.Classification", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -60,7 +82,7 @@ namespace multi_store.Migrations
                     b.ToTable("Classifications");
                 });
 
-            modelBuilder.Entity("multi_store.Models.Delivery", b =>
+            modelBuilder.Entity("dotnet.Models.Delivery", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -82,7 +104,7 @@ namespace multi_store.Migrations
                     b.ToTable("Deliveries");
                 });
 
-            modelBuilder.Entity("multi_store.Models.Group", b =>
+            modelBuilder.Entity("dotnet.Models.Group", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -100,20 +122,50 @@ namespace multi_store.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("multi_store.Models.Order", b =>
+            modelBuilder.Entity("dotnet.Models.Image", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("BusinessId");
+                    b.Property<string>("Path");
+
+                    b.Property<long>("ProductId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("dotnet.Models.Order", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
+
+                    b.Property<short?>("IsPaymentDone");
+
+                    b.Property<short>("IsSelfPick");
 
                     b.Property<DateTime>("OrderDeliveryDate");
 
                     b.Property<DateTime>("OrderPlacementDate");
 
+                    b.Property<int>("OrderStatus");
+
+                    b.Property<int>("PaymentMethod");
+
+                    b.Property<string>("RiderContactNo");
+
                     b.Property<long?>("RiderId");
+
+                    b.Property<string>("RiderName");
+
+                    b.Property<string>("RiderVehicleNo");
+
+                    b.Property<long>("ShopId");
 
                     b.Property<long>("TotalAmmount");
 
@@ -123,25 +175,23 @@ namespace multi_store.Migrations
 
                     b.HasIndex("RiderId");
 
+                    b.HasIndex("ShopId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("multi_store.Models.OrderItem", b =>
+            modelBuilder.Entity("dotnet.Models.OrderItem", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long?>("OrderId");
-
-                    b.Property<int>("Price");
+                    b.Property<long>("OrderId");
 
                     b.Property<long>("ProductId");
 
                     b.Property<int>("Quantity");
-
-                    b.Property<long>("ServiceId");
 
                     b.Property<int>("TotalAmount");
 
@@ -154,7 +204,7 @@ namespace multi_store.Migrations
                     b.ToTable("OrderItem");
                 });
 
-            modelBuilder.Entity("multi_store.Models.Product", b =>
+            modelBuilder.Entity("dotnet.Models.Product", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -163,18 +213,48 @@ namespace multi_store.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<string>("Dimension");
+
+                    b.Property<int?>("Discount");
+
+                    b.Property<short?>("IsAllowed");
+
+                    b.Property<short?>("IsDisabled");
+
+                    b.Property<short?>("IsNew");
+
+                    b.Property<short?>("IsOffer");
+
+                    b.Property<short?>("IsOutOfStock");
+
+                    b.Property<short?>("IsSale");
+
                     b.Property<int>("Price");
 
+                    b.Property<string>("ProductCode");
+
+                    b.Property<string>("ProductDetail");
+
+                    b.Property<int?>("Quantity");
+
+                    b.Property<long>("ShopId");
+
                     b.Property<string>("Title");
+
+                    b.Property<string>("Unit");
+
+                    b.Property<float?>("Weight");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClassificationId");
 
+                    b.HasIndex("ShopId");
+
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("multi_store.Models.ProductType", b =>
+            modelBuilder.Entity("dotnet.Models.ProductType", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -186,7 +266,7 @@ namespace multi_store.Migrations
                     b.ToTable("ProductTypes");
                 });
 
-            modelBuilder.Entity("multi_store.Models.Rider", b =>
+            modelBuilder.Entity("dotnet.Models.Rider", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -210,7 +290,7 @@ namespace multi_store.Migrations
                     b.ToTable("Riders");
                 });
 
-            modelBuilder.Entity("multi_store.Models.Role", b =>
+            modelBuilder.Entity("dotnet.Models.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -230,16 +310,16 @@ namespace multi_store.Migrations
                         new
                         {
                             Id = 2,
-                            Title = "Service_Provider"
+                            Title = "ShopOwner"
                         },
                         new
                         {
                             Id = 3,
-                            Title = "Service_Consumer"
+                            Title = "Customer"
                         });
                 });
 
-            modelBuilder.Entity("multi_store.Models.Service", b =>
+            modelBuilder.Entity("dotnet.Models.Service", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -255,14 +335,80 @@ namespace multi_store.Migrations
                     b.ToTable("Services");
                 });
 
-            modelBuilder.Entity("multi_store.Models.User", b =>
+            modelBuilder.Entity("dotnet.Models.Shop", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Address");
 
-                    b.Property<string>("Business_Name");
+                    b.Property<string>("Banner");
+
+                    b.Property<string>("Contact");
+
+                    b.Property<long>("GroupId");
+
+                    b.Property<short?>("IsDisabled");
+
+                    b.Property<short?>("IsVerified");
+
+                    b.Property<string>("Latitude");
+
+                    b.Property<string>("Logo");
+
+                    b.Property<string>("Longitude");
+
+                    b.Property<string>("NDN_Number");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("OwnerCNIC");
+
+                    b.Property<long>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Shops");
+                });
+
+            modelBuilder.Entity("dotnet.Models.Transaction", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Amount");
+
+                    b.Property<long>("OrderId");
+
+                    b.Property<long>("ShopId");
+
+                    b.Property<DateTime>("TransactionDate");
+
+                    b.Property<long>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ShopId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("dotnet.Models.User", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address");
+
+                    b.Property<int>("Code");
 
                     b.Property<string>("Contact_Number");
 
@@ -270,19 +416,19 @@ namespace multi_store.Migrations
 
                     b.Property<string>("FirstName");
 
+                    b.Property<short?>("IsDisabled");
+
+                    b.Property<short?>("IsVerified");
+
                     b.Property<string>("LastName");
-
-                    b.Property<string>("Latitude");
-
-                    b.Property<string>("Longitude");
-
-                    b.Property<string>("NDN_Number");
 
                     b.Property<string>("Password");
 
                     b.Property<int>("RoleId");
 
                     b.Property<string>("Site_link");
+
+                    b.Property<string>("UserImage");
 
                     b.HasKey("Id");
 
@@ -291,7 +437,7 @@ namespace multi_store.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("multi_store.Models.Vehicle", b =>
+            modelBuilder.Entity("dotnet.Models.Vehicle", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -307,78 +453,136 @@ namespace multi_store.Migrations
                     b.ToTable("Vehicles");
                 });
 
-            modelBuilder.Entity("multi_store.Models.Category", b =>
+            modelBuilder.Entity("dotnet.Models.Account", b =>
                 {
-                    b.HasOne("multi_store.Models.Group", "group")
-                        .WithMany()
+                    b.HasOne("dotnet.Models.User", "User")
+                        .WithMany("Accounts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("dotnet.Models.Category", b =>
+                {
+                    b.HasOne("dotnet.Models.Group", "Group")
+                        .WithMany("Categories")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("multi_store.Models.Classification", b =>
+            modelBuilder.Entity("dotnet.Models.Classification", b =>
                 {
-                    b.HasOne("multi_store.Models.Category", "Category")
-                        .WithMany()
+                    b.HasOne("dotnet.Models.Category", "Category")
+                        .WithMany("Classifications")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("multi_store.Models.Delivery", b =>
+            modelBuilder.Entity("dotnet.Models.Delivery", b =>
                 {
-                    b.HasOne("multi_store.Models.Order", "Order")
+                    b.HasOne("dotnet.Models.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("multi_store.Models.Rider", "Rider")
+                    b.HasOne("dotnet.Models.Rider", "Rider")
                         .WithMany()
                         .HasForeignKey("RiderId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("multi_store.Models.Order", b =>
+            modelBuilder.Entity("dotnet.Models.Image", b =>
                 {
-                    b.HasOne("multi_store.Models.Rider", "Rider")
+                    b.HasOne("dotnet.Models.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("dotnet.Models.Order", b =>
+                {
+                    b.HasOne("dotnet.Models.Rider", "Rider")
                         .WithMany()
                         .HasForeignKey("RiderId");
 
-                    b.HasOne("multi_store.Models.User", "User")
+                    b.HasOne("dotnet.Models.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("dotnet.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("multi_store.Models.OrderItem", b =>
+            modelBuilder.Entity("dotnet.Models.OrderItem", b =>
                 {
-                    b.HasOne("multi_store.Models.Order", "Order")
+                    b.HasOne("dotnet.Models.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("multi_store.Models.Product", "Product")
+                    b.HasOne("dotnet.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("multi_store.Models.Product", b =>
+            modelBuilder.Entity("dotnet.Models.Product", b =>
                 {
-                    b.HasOne("multi_store.Models.Classification", "classification")
+                    b.HasOne("dotnet.Models.Classification", "Classification")
                         .WithMany()
                         .HasForeignKey("ClassificationId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("dotnet.Models.Shop", "Shop")
+                        .WithMany("Products")
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("multi_store.Models.Rider", b =>
+            modelBuilder.Entity("dotnet.Models.Rider", b =>
                 {
-                    b.HasOne("multi_store.Models.Vehicle", "Vehicle")
+                    b.HasOne("dotnet.Models.Vehicle", "Vehicle")
                         .WithMany()
                         .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("multi_store.Models.User", b =>
+            modelBuilder.Entity("dotnet.Models.Shop", b =>
                 {
-                    b.HasOne("multi_store.Models.Role", "Role")
+                    b.HasOne("dotnet.Models.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("dotnet.Models.User", "User")
+                        .WithMany("Shops")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("dotnet.Models.Transaction", b =>
+                {
+                    b.HasOne("dotnet.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("dotnet.Models.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("dotnet.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("dotnet.Models.User", b =>
+                {
+                    b.HasOne("dotnet.Models.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);

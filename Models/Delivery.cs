@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 
-namespace multi_store.Models
+namespace dotnet.Models
 {
 
     public class Delivery
@@ -12,10 +12,8 @@ namespace multi_store.Models
         public DateTime AssignedDate { get; set; }
         public DateTime DeliveredDate { get; set; }
         public long OrderId { get; set; }
-         [JsonIgnore]
         public virtual  Order Order { get; set; }
         public long RiderId { get; set; }
-         [JsonIgnore]
         public virtual  Rider Rider { get; set; }
     
     }

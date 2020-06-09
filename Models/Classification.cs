@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace multi_store.Models
+namespace dotnet.Models
 {
 	public class Classification
 	{
@@ -13,6 +13,6 @@ namespace multi_store.Models
 		public string Thumbmail { get; set; }
 		public string Banner { get; set; }
 		public long CategoryId { get; set; }
-        public virtual Category Category { get; set; }	
+        public virtual Category Category { get; set; }		
 	}
 }

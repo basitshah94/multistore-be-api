@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace multi_store.Models
+namespace dotnet.Models
 {
 
     public class Product
@@ -15,7 +15,7 @@ namespace multi_store.Models
         public string ProductDetail {get; set;}
         public int? Discount{get; set;}
         public int? Quantity {get; set;}
-        public float? weight { get; set; }
+        public float? Weight { get; set; }
         public string Unit { get; set; }
         public string Dimension { get; set; }
         public bool? IsDisabled { get; set; } //for shop ownwr
@@ -23,6 +23,7 @@ namespace multi_store.Models
         public bool? IsOutOfStock {get; set;}
         public bool? IsNew {get; set;}
         public bool? IsSale {get; set;}
+        public bool? IsOffer {get; set;}
         public virtual ICollection<Image> Images { get; set; }
         public long ClassificationId { get; set; }
         //  [JsonIgnore]

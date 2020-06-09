@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace multi_store.Models
+namespace dotnet.Models
 {
 
     public class Role

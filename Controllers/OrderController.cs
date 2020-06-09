@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using multi_store.Models;
+using dotnet.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace multi_store.Controllers
+namespace dotnet.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -25,6 +25,13 @@ namespace multi_store.Controllers
          public async Task<ActionResult<IEnumerable<Order>>> GetAll()
         {
             return await _db.Orders.ToListAsync();
+        }
+  
+       [HttpGet("customer/{id}")]
+         public async Task<ActionResult<IEnumerable<Order>>> GetByCustomer(long id)
+        {
+            var orders =  await _db.Orders.Where(x=>x.UserId == id).ToListAsync();
+            return orders;
         }
 
         // GET api/order/5
@@ -45,6 +52,13 @@ namespace multi_store.Controllers
             _db.Orders.Update(order);
             
             await _db.SaveChangesAsync();
+
+            foreach (var item in order.OrderItems)
+            {
+              Product product = await _db.Products.Where(x=>x.Id == item.ProductId).FirstOrDefaultAsync();
+              product.Quantity = product.Quantity - item.Quantity;
+               _db.SaveChangesAsync();
+            }
 
             return CreatedAtAction(nameof(GetSingle), new { id = order.Id }, order);
         }

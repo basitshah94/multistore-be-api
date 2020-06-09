@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-namespace multi_store.Models
+namespace dotnet.Models
 {
 	public class Group
 	{
@@ -10,5 +10,6 @@ namespace multi_store.Models
 		public string Description { get; set; }
 		public string Thumbnail { get; set; }
 		public string Banner { get; set; }
+		public virtual ICollection<Category> Categories { get; set; }
 	}
 }

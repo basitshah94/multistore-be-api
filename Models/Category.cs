@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-namespace multi_store.Models
+namespace dotnet.Models
 {
 	public class Category
 	{
@@ -11,6 +11,7 @@ namespace multi_store.Models
 		public string Thumnail { get; set; }
 		public string Banner { get; set; }
 		public long GroupId { get; set; }
-        public virtual  Group Group { get; set; }	
+        public virtual Group Group { get; set; }	
+		public virtual ICollection<Classification> Classifications { get; set; }	
 	}
 }

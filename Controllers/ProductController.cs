@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using multi_store.Models;
+using dotnet.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace multi_store.Controllers
+namespace dotnet.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -36,6 +36,12 @@ namespace multi_store.Controllers
                 return NotFound();
 
             return product;
+        }
+
+        [HttpGet("shop/{id}")]
+         public async Task<ActionResult<IEnumerable<Product>>> GetAll(long id)
+        {
+            return await _db.Products.Include(x=>x.Images).Include(x=>x.Classification).ThenInclude(x=>x.Category).ThenInclude(x=>x.Group).Where(x=>x.ShopId == id).ToListAsync();
         }
 
         // POST api/product

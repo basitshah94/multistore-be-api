@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace multi_store.Controllers
+namespace dotnet.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

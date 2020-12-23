@@ -32,7 +32,7 @@ namespace dotnet.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Group>> GetSingle(long id)
         {
-            var group = await _db.Groups.FindAsync(id);
+            var group = await _db.Groups.Include(x=>x.Categories).ThenInclude(x=>x.Classifications).Where(x=>x.Id == id).FirstOrDefaultAsync();
             if (group == null)
                 return NotFound();
 
@@ -43,10 +43,17 @@ namespace dotnet.Controllers
        [HttpPost]
         public async Task<ActionResult<Group>> Post(Group group)
         {
-            _db.Groups.Update(group);
+            var GROUP = await _db.Groups.Where(x=>x.Name.ToLower() == group.Name.ToLower()).FirstOrDefaultAsync();
+            if(GROUP != null){
+               _db.Groups.Update(group);
             await _db.SaveChangesAsync();
-
             return CreatedAtAction(nameof(GetSingle), new { id = group.Id }, group);
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
         // PUT api/group/5

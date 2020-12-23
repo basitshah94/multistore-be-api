@@ -48,7 +48,7 @@ namespace dotnet {
                 });
             services.AddDbContext<Context> (options => options.UseMySQL (Configuration.GetConnectionString ("DefaultConnection")));
             // services.AddDbContext<ApplicationDbContext>();
-            services.AddControllers ();
+            services.AddControllers();
             services.AddSwaggerGen ((options) => {
                 options.SwaggerDoc ("v1", new OpenApiInfo { Title = "myApi", Version = "v1" });
             });
@@ -86,10 +86,7 @@ namespace dotnet {
             app.UseSwaggerUI (c => {
                 c.SwaggerEndpoint ("/swagger/v1/swagger.json", "My API V1");
             });
-            // app.UseCors (builder => {
-            //     builder.AllowAnyOrigin ().AllowAnyHeader ().AllowAnyMethod ();
-                //.AllowCredentials ();     
-            // });
+          
             app.UseCors(
                options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
            );

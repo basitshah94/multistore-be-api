@@ -9,8 +9,8 @@ using dotnet.Models;
 namespace dotnet.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20200605133051_init")]
-    partial class init
+    [Migration("20201119113217_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -145,11 +145,15 @@ namespace dotnet.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<double>("CustomerLat");
+
+                    b.Property<double>("CustomerLong");
+
                     b.Property<string>("Description");
 
-                    b.Property<short?>("IsPaymentDone");
+                    b.Property<short?>("IsReceived");
 
-                    b.Property<short>("IsSelfPick");
+                    b.Property<int>("OrderCode");
 
                     b.Property<DateTime>("OrderDeliveryDate");
 
@@ -159,13 +163,7 @@ namespace dotnet.Migrations
 
                     b.Property<int>("PaymentMethod");
 
-                    b.Property<string>("RiderContactNo");
-
                     b.Property<long?>("RiderId");
-
-                    b.Property<string>("RiderName");
-
-                    b.Property<string>("RiderVehicleNo");
 
                     b.Property<long>("ShopId");
 
@@ -318,6 +316,11 @@ namespace dotnet.Migrations
                         {
                             Id = 3,
                             Title = "Customer"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Title = "Rider"
                         });
                 });
 
@@ -348,23 +351,25 @@ namespace dotnet.Migrations
 
                     b.Property<string>("Contact");
 
+                    b.Property<long>("DeliveryRadius");
+
                     b.Property<long>("GroupId");
 
                     b.Property<short?>("IsDisabled");
 
+                    b.Property<short?>("IsInRange");
+
                     b.Property<short?>("IsVerified");
 
-                    b.Property<string>("Latitude");
+                    b.Property<double>("Latitude");
 
                     b.Property<string>("Logo");
 
-                    b.Property<string>("Longitude");
+                    b.Property<double>("Longitude");
 
                     b.Property<string>("NDN_Number");
 
                     b.Property<string>("Name");
-
-                    b.Property<string>("OwnerCNIC");
 
                     b.Property<long>("UserId");
 
@@ -409,6 +414,10 @@ namespace dotnet.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Address");
+
+                    b.Property<string>("CNIC");
+
+                    b.Property<string>("CNIC_Image");
 
                     b.Property<int>("Code");
 
@@ -502,7 +511,7 @@ namespace dotnet.Migrations
 
             modelBuilder.Entity("dotnet.Models.Order", b =>
                 {
-                    b.HasOne("dotnet.Models.Rider", "Rider")
+                    b.HasOne("dotnet.Models.User", "Rider")
                         .WithMany()
                         .HasForeignKey("RiderId");
 

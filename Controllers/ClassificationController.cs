@@ -42,10 +42,20 @@ namespace dotnet.Controllers
        [HttpPost]
         public async Task<ActionResult<Classification>> Post(Classification classification)
         {
-            _db.Classifications.Update(classification);
-            await _db.SaveChangesAsync();
+
+               var CLASSIFICATION = await _db.Classifications.Where(x=>x.Name.ToLower() == classification.Name.ToLower() && x.CategoryId == classification.CategoryId).FirstOrDefaultAsync();
+               if(CLASSIFICATION == null)
+               {
+                         _db.Classifications.Update(classification);
+                           await _db.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetSingle), new { id = classification.Id }, classification);
+                 
+               }else{
+                      return NotFound();
+               }
+
+      
         }
 
         // PUT api/classification/5

@@ -22,6 +22,8 @@ namespace dotnet.Models
         public bool? IsDisabled { get; set; }
         public string Address { get; set; }
         public string Contact_Number { get; set; }
+        public string CNIC { get; set; }
+        public string CNIC_Image { get; set; }
         public string UserImage{ get; set; }
         public string Site_link { get; set; }
     

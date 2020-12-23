@@ -31,7 +31,7 @@ namespace dotnet.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetSingle(long id)
         {
-            var category = await _db.Categories.FindAsync(id);
+            var category = await _db.Categories.Include(x=>x.Classifications).Where(x=>x.Id == id).FirstOrDefaultAsync();
             if (category == null)
                 return NotFound();
 
@@ -42,10 +42,16 @@ namespace dotnet.Controllers
        [HttpPost]
         public async Task<ActionResult<Category>> Post(Category category)
         {
-            _db.Categories.Update(category);
+             var CATEGORY = await _db.Categories.Where(x=>x.Name.ToLower() == category.Name.ToLower() && x.GroupId==category.GroupId).FirstOrDefaultAsync();
+             if(CATEGORY == null){
+                _db.Categories.Update(category);
             await _db.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetSingle), new { id = category.Id }, category);
+             }else{
+                     return NotFound();
+             }
+            
         }
 
         // PUT api/category/5

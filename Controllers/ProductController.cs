@@ -61,7 +61,9 @@ namespace dotnet.Controllers
         {
             if (id != product.Id)
                 return BadRequest();
-
+          var Images = _db.Images.Where(x=>x.ProductId == id).ToList();
+          _db.Images.RemoveRange(Images);
+          _db.Images.AddRange(product.Images);
             _db.Entry(product).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 

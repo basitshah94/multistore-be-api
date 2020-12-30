@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace dotnet.Migrations
 {
-    public partial class init : Migration
+    public partial class first : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -118,6 +118,8 @@ namespace dotnet.Migrations
                     IsDisabled = table.Column<short>(nullable: true),
                     Address = table.Column<string>(nullable: true),
                     Contact_Number = table.Column<string>(nullable: true),
+                    CNIC = table.Column<string>(nullable: true),
+                    CNIC_Image = table.Column<string>(nullable: true),
                     UserImage = table.Column<string>(nullable: true),
                     Site_link = table.Column<string>(nullable: true)
                 },
@@ -212,13 +214,14 @@ namespace dotnet.Migrations
                     Address = table.Column<string>(nullable: true),
                     UserId = table.Column<long>(nullable: false),
                     GroupId = table.Column<long>(nullable: false),
+                    DeliveryRadius = table.Column<long>(nullable: false),
                     Contact = table.Column<string>(nullable: true),
                     Logo = table.Column<string>(nullable: true),
                     Banner = table.Column<string>(nullable: true),
                     NDN_Number = table.Column<string>(nullable: true),
-                    Latitude = table.Column<string>(nullable: true),
-                    Longitude = table.Column<string>(nullable: true),
-                    OwnerCNIC = table.Column<string>(nullable: true),
+                    Latitude = table.Column<double>(nullable: false),
+                    Longitude = table.Column<double>(nullable: false),
+                    IsInRange = table.Column<short>(nullable: true),
                     IsVerified = table.Column<short>(nullable: true),
                     IsDisabled = table.Column<short>(nullable: true)
                 },
@@ -249,13 +252,12 @@ namespace dotnet.Migrations
                     OrderPlacementDate = table.Column<DateTime>(nullable: false),
                     OrderDeliveryDate = table.Column<DateTime>(nullable: false),
                     TotalAmmount = table.Column<long>(nullable: false),
-                    IsSelfPick = table.Column<short>(nullable: false),
-                    IsPaymentDone = table.Column<short>(nullable: true),
-                    RiderName = table.Column<string>(nullable: true),
-                    RiderVehicleNo = table.Column<string>(nullable: true),
-                    RiderContactNo = table.Column<string>(nullable: true),
                     PaymentMethod = table.Column<int>(nullable: false),
                     OrderStatus = table.Column<int>(nullable: false),
+                    CustomerLat = table.Column<double>(nullable: false),
+                    CustomerLong = table.Column<double>(nullable: false),
+                    OrderCode = table.Column<int>(nullable: false),
+                    IsReceived = table.Column<short>(nullable: true),
                     UserId = table.Column<long>(nullable: false),
                     ShopId = table.Column<long>(nullable: false),
                     RiderId = table.Column<long>(nullable: true)
@@ -264,9 +266,9 @@ namespace dotnet.Migrations
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_Riders_RiderId",
+                        name: "FK_Orders_Users_RiderId",
                         column: x => x.RiderId,
-                        principalTable: "Riders",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -439,17 +441,13 @@ namespace dotnet.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "Title" },
-                values: new object[] { 1, "Admin" });
-
-            migrationBuilder.InsertData(
-                table: "Roles",
-                columns: new[] { "Id", "Title" },
-                values: new object[] { 2, "ShopOwner" });
-
-            migrationBuilder.InsertData(
-                table: "Roles",
-                columns: new[] { "Id", "Title" },
-                values: new object[] { 3, "Customer" });
+                values: new object[,]
+                {
+                    { 1, "Admin" },
+                    { 2, "ShopOwner" },
+                    { 3, "Customer" },
+                    { 4, "Rider" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_UserId",
@@ -576,25 +574,25 @@ namespace dotnet.Migrations
                 name: "Transactions");
 
             migrationBuilder.DropTable(
+                name: "Riders");
+
+            migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Classifications");
+                name: "Vehicles");
 
             migrationBuilder.DropTable(
-                name: "Riders");
+                name: "Classifications");
 
             migrationBuilder.DropTable(
                 name: "Shops");
 
             migrationBuilder.DropTable(
                 name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Vehicles");
 
             migrationBuilder.DropTable(
                 name: "Users");

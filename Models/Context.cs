@@ -13,7 +13,8 @@ namespace dotnet.Models {
         public DbSet<Delivery> Deliveries { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItem { get; set; }
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Product> Products { get; set; } //ReturnedProduct
+        public DbSet<ReturnedProduct> ReturnedProducts { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<Rider> Riders { get; set; }
         public DbSet<Service> Services { get; set; }
@@ -41,6 +42,10 @@ namespace dotnet.Models {
                 new Role {
                     Id = 3,
                         Title = "Customer"
+                },
+                new Role {
+                    Id = 4,
+                    Title = "Rider"
                 }
             );
 
@@ -49,7 +54,15 @@ namespace dotnet.Models {
                 .HasConversion (new BoolToZeroOneConverter<Int16> ());
 
             modelBuilder.Entity<Shop> ()
+                .Property (r => r.IsInRange)
+                .HasConversion (new BoolToZeroOneConverter<Int16> ());
+
+            modelBuilder.Entity<Shop> ()
                 .Property (r => r.IsDisabled)
+                .HasConversion (new BoolToZeroOneConverter<Int16> ());
+
+             modelBuilder.Entity<Shop> ()
+                .Property (r => r.IsReturnable)
                 .HasConversion (new BoolToZeroOneConverter<Int16> ());
 
             modelBuilder.Entity<Product> ()
@@ -76,11 +89,8 @@ namespace dotnet.Models {
                 .Property (r => r.IsOffer)
                 .HasConversion (new BoolToZeroOneConverter<Int16> ());
 
-            modelBuilder.Entity<Order> (b => {
-                b.Property (r => r.IsSelfPick)
-                    .HasConversion (new BoolToZeroOneConverter<Int16> ());
-
-                b.Property (r => r.IsPaymentDone)
+            modelBuilder.Entity<Order> (b => {  
+                    b.Property (r => r.IsReceived)
                     .HasConversion (new BoolToZeroOneConverter<Int16> ());
             });
 

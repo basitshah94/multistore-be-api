@@ -38,6 +38,18 @@ namespace dotnet.Migrations
                     b.ToTable("Accounts");
                 });
 
+            modelBuilder.Entity("dotnet.Models.Bank", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BankName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Bank");
+                });
+
             modelBuilder.Entity("dotnet.Models.Category", b =>
                 {
                     b.Property<long>("Id")
@@ -147,6 +159,8 @@ namespace dotnet.Migrations
 
                     b.Property<double>("CustomerLong");
 
+                    b.Property<string>("DelieveryAddress");
+
                     b.Property<string>("Description");
 
                     b.Property<short?>("IsReceived");
@@ -174,6 +188,8 @@ namespace dotnet.Migrations
                     b.Property<long>("TotalAmmount");
 
                     b.Property<long>("UserId");
+
+                    b.Property<int?>("deliveryCharges");
 
                     b.HasKey("Id");
 
@@ -365,7 +381,13 @@ namespace dotnet.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AccountNumber");
+
+                    b.Property<string>("AccountType");
+
                     b.Property<string>("Address");
+
+                    b.Property<string>("BankName");
 
                     b.Property<string>("Banner");
 

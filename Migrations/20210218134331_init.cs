@@ -3,10 +3,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace dotnet.Migrations
 {
-    public partial class first : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Bank",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:AutoIncrement", true),
+                    BankName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bank", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Groups",
                 columns: table => new
@@ -34,6 +47,20 @@ namespace dotnet.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReturnedProducts",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("MySQL:AutoIncrement", true),
+                    Name = table.Column<string>(nullable: true),
+                    Price = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReturnedProducts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -223,7 +250,11 @@ namespace dotnet.Migrations
                     Longitude = table.Column<double>(nullable: false),
                     IsInRange = table.Column<short>(nullable: true),
                     IsVerified = table.Column<short>(nullable: true),
-                    IsDisabled = table.Column<short>(nullable: true)
+                    IsDisabled = table.Column<short>(nullable: true),
+                    IsReturnable = table.Column<short>(nullable: true),
+                    AccountType = table.Column<string>(nullable: true),
+                    AccountNumber = table.Column<string>(nullable: true),
+                    BankName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -251,6 +282,7 @@ namespace dotnet.Migrations
                     Description = table.Column<string>(nullable: true),
                     OrderPlacementDate = table.Column<DateTime>(nullable: false),
                     OrderDeliveryDate = table.Column<DateTime>(nullable: false),
+                    DelieveryAddress = table.Column<string>(nullable: true),
                     TotalAmmount = table.Column<long>(nullable: false),
                     PaymentMethod = table.Column<int>(nullable: false),
                     OrderStatus = table.Column<int>(nullable: false),
@@ -260,11 +292,21 @@ namespace dotnet.Migrations
                     IsReceived = table.Column<short>(nullable: true),
                     UserId = table.Column<long>(nullable: false),
                     ShopId = table.Column<long>(nullable: false),
-                    RiderId = table.Column<long>(nullable: true)
+                    RiderId = table.Column<long>(nullable: true),
+                    ReturnedProductId = table.Column<long>(nullable: true),
+                    ReturnQuantity = table.Column<int>(nullable: true),
+                    deliveryCharges = table.Column<int>(nullable: true),
+                    ReturnDiscount = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_ReturnedProducts_ReturnedProductId",
+                        column: x => x.ReturnedProductId,
+                        principalTable: "ReturnedProducts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Orders_Users_RiderId",
                         column: x => x.RiderId,
@@ -490,6 +532,11 @@ namespace dotnet.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_ReturnedProductId",
+                table: "Orders",
+                column: "ReturnedProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_RiderId",
                 table: "Orders",
                 column: "RiderId");
@@ -556,6 +603,9 @@ namespace dotnet.Migrations
                 name: "Accounts");
 
             migrationBuilder.DropTable(
+                name: "Bank");
+
+            migrationBuilder.DropTable(
                 name: "Deliveries");
 
             migrationBuilder.DropTable(
@@ -587,6 +637,9 @@ namespace dotnet.Migrations
 
             migrationBuilder.DropTable(
                 name: "Classifications");
+
+            migrationBuilder.DropTable(
+                name: "ReturnedProducts");
 
             migrationBuilder.DropTable(
                 name: "Shops");

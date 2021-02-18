@@ -9,8 +9,8 @@ using dotnet.Models;
 namespace dotnet.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20201119113217_first")]
-    partial class first
+    [Migration("20210218134331_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,6 +38,18 @@ namespace dotnet.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("dotnet.Models.Bank", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BankName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Bank");
                 });
 
             modelBuilder.Entity("dotnet.Models.Category", b =>
@@ -149,6 +161,8 @@ namespace dotnet.Migrations
 
                     b.Property<double>("CustomerLong");
 
+                    b.Property<string>("DelieveryAddress");
+
                     b.Property<string>("Description");
 
                     b.Property<short?>("IsReceived");
@@ -163,6 +177,12 @@ namespace dotnet.Migrations
 
                     b.Property<int>("PaymentMethod");
 
+                    b.Property<long?>("ReturnDiscount");
+
+                    b.Property<int?>("ReturnQuantity");
+
+                    b.Property<long?>("ReturnedProductId");
+
                     b.Property<long?>("RiderId");
 
                     b.Property<long>("ShopId");
@@ -171,7 +191,11 @@ namespace dotnet.Migrations
 
                     b.Property<long>("UserId");
 
+                    b.Property<int?>("deliveryCharges");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ReturnedProductId");
 
                     b.HasIndex("RiderId");
 
@@ -266,6 +290,20 @@ namespace dotnet.Migrations
                     b.ToTable("ProductTypes");
                 });
 
+            modelBuilder.Entity("dotnet.Models.ReturnedProduct", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Price");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReturnedProducts");
+                });
+
             modelBuilder.Entity("dotnet.Models.Rider", b =>
                 {
                     b.Property<long>("Id")
@@ -345,7 +383,13 @@ namespace dotnet.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AccountNumber");
+
+                    b.Property<string>("AccountType");
+
                     b.Property<string>("Address");
+
+                    b.Property<string>("BankName");
 
                     b.Property<string>("Banner");
 
@@ -358,6 +402,8 @@ namespace dotnet.Migrations
                     b.Property<short?>("IsDisabled");
 
                     b.Property<short?>("IsInRange");
+
+                    b.Property<short?>("IsReturnable");
 
                     b.Property<short?>("IsVerified");
 
@@ -511,6 +557,10 @@ namespace dotnet.Migrations
 
             modelBuilder.Entity("dotnet.Models.Order", b =>
                 {
+                    b.HasOne("dotnet.Models.ReturnedProduct", "ReturnedProduct")
+                        .WithMany()
+                        .HasForeignKey("ReturnedProductId");
+
                     b.HasOne("dotnet.Models.User", "Rider")
                         .WithMany()
                         .HasForeignKey("RiderId");

@@ -44,7 +44,7 @@ namespace dotnet.Controllers
         public async Task<ActionResult<Group>> Post(Group group)
         {
             var GROUP = await _db.Groups.Where(x=>x.Name.ToLower() == group.Name.ToLower()).FirstOrDefaultAsync();
-            if(GROUP != null){
+            if(GROUP == null){
                _db.Groups.Update(group);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetSingle), new { id = group.Id }, group);

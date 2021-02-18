@@ -11,6 +11,7 @@ namespace dotnet.Models
         public long TotalAmount { get; set; }
         public double ShopAmount { get; set; }
         public double CompanyAmount { get; set; }
+        public int Orders { get; set; }
     
     }
 

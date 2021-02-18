@@ -18,8 +18,13 @@ namespace dotnet
         
         }
         static TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-         
-          public void sendCodeSMS (int code , string usermobile) {
+
+        public void sendMessage(string Message, string usermobile)
+        {
+          ;
+            SendSMS(usermobile, Message);
+        }
+        public void sendCodeSMS (int code , string usermobile) {
                 string sms = "Your OTP code for Kuick Save is  " + code + " For any issues, contact us at 03214658119 or kuicksave.com" ;
                 SendSMS(usermobile , sms);
             }

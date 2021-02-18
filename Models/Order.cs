@@ -25,6 +25,7 @@ namespace dotnet.Models
         public string Description { get; set; }
         public DateTime OrderPlacementDate  { get; set; }
         public DateTime OrderDeliveryDate  { get; set; }
+        public string DelieveryAddress { get; set; }
         public long TotalAmmount { get; set; }
         public PaymentMethod PaymentMethod {get ; set;}   //0 for cash //1 for easypaisa // 2 for  jazzcash
         public OrderStatus OrderStatus {get ; set;} 
@@ -40,6 +41,7 @@ namespace dotnet.Models
         public virtual User Rider { get; set; }
         public long? ReturnedProductId { get; set; }
          public int? ReturnQuantity { get; set; }
+         public int? deliveryCharges { get; set; }
          public long? ReturnDiscount { get; set; }
         public virtual ReturnedProduct ReturnedProduct { get; set; }
        public virtual ICollection<OrderItem> OrderItems { get; set; }

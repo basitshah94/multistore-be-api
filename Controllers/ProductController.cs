@@ -43,7 +43,21 @@ namespace dotnet.Controllers
         {
             return await _db.Products.Include(x=>x.Images).Include(x=>x.Classification).ThenInclude(x=>x.Category).ThenInclude(x=>x.Group).Where(x=>x.ShopId == id).ToListAsync();
         }
-
+        [HttpGet ("userProduct/{id}")]
+        public  List<Product> GetProductByUser(long id)
+        {
+           var Shops =  _db.Shops.Include(x=>x.Products).Where(x => x.UserId == id) ;
+            var productList=new List<Product>();
+            foreach (Shop shop in Shops)
+            {
+                foreach (Product prod in shop.Products)
+                {
+                    productList.Add(prod);
+                }
+            }
+            // return await productList.ToListAsync();
+            return productList;
+        }
         // POST api/product
        [HttpPost]
         public async Task<ActionResult<Product>> Post(Product product)

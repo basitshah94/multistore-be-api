@@ -215,6 +215,19 @@ namespace dotnet.Controllers {
                 return NotFound (new { message = "Invalid Email or Password." }); 
         }
 
+
+        [HttpGet("resendCode/{id}")]
+        public async Task<ActionResult<User>> resendCode(long id )
+        {
+            var dbUser=_db.Users.Where(x=>x.Id==id).FirstOrDefault();
+              EmailService email = new EmailService (_db);
+                SMSService sms = new SMSService (_db);
+                sms.sendCodeSMS (dbUser.Code, dbUser.Contact_Number);
+                email.sendCodeEmail (dbUser.Code, dbUser.Email_Address);
+
+            return NoContent();
+        }
+
         // [HttpPut("{id}/update-profile")]
         // public async Task<ActionResult<User>> UpdateProfile(long id , User User)
         // {

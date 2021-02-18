@@ -25,7 +25,7 @@ namespace dotnet.Controllers {
 
         [HttpGet ("{lat}/{lng}")]
         public async Task<ActionResult<ICollection<Shop>>> GetInField (float lat, float lng) {
-            var shops = await _db.Shops.Include (x => x.Group).Where(x=>x.IsVerified == true).ToListAsync ();
+            var shops = await _db.Shops.Include (x => x.Group).Where(x=>x.IsVerified == true || x.IsDisabled==false).ToListAsync ();
            // List<Shop> fieldShops = new List<Shop> ();
             foreach (var shop in shops) {
                 var distance = CalculateDistance (lat, lng, shop.Latitude, shop.Longitude);

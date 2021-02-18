@@ -109,6 +109,11 @@ var User = await _db.Users.Where(x=> x.Id == order.UserId).FirstOrDefaultAsync()
                 sms.sendOrderCodeSMS (order.OrderCode, User.Contact_Number);
                 email.sendOrderCode (order.OrderCode, User.Email_Address);
 
+            var Riders = await _db.Users.Where(x => x.RoleId == 4 && x.IsDisabled==false && x.IsVerified==true).ToListAsync();
+            foreach (var rider in Riders) {
+                var Message = "New Order is placed. login to kuicksave for details";
+                sms.sendMessage(Message, rider.Contact_Number);
+            }
         return CreatedAtAction (nameof (GetSingle), new { id = order.Id }, order);
     }
 
@@ -219,5 +224,20 @@ var User = await _db.Users.Where(x=> x.Id == order.UserId).FirstOrDefaultAsync()
 
             return result2;
         }
-}
+        [HttpGet("rider/{Id}")]
+        public async Task<ActionResult<RiderDashboard>> GetRiderDashboard(int Id)
+        {
+            var dashboard = new RiderDashboard();
+            var PendingOrders = _db.Orders.Where(x => x.OrderStatus == OrderStatus.Assigned && x.RiderId == Id).Count();
+            var CompleteOrders = _db.Orders.Where(x => x.OrderStatus == OrderStatus.Complete && x.RiderId == Id).Count();
+            var TotalOrders = PendingOrders + CompleteOrders;
+
+            dashboard.PendingOrder = PendingOrders;
+            dashboard.CompleteOrder = CompleteOrders;
+            dashboard.TotalOrders = TotalOrders;
+
+            return dashboard;
+
+        }
+    }
 }

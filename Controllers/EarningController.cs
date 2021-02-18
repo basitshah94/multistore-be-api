@@ -1,19 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using CsvHelper;
 using dotnet.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 
-namespace dotnet.Controllers {
+namespace dotnet.Controllers
+{
 
     [Route ("api/[controller]")]
     [ApiController]
@@ -28,17 +27,17 @@ namespace dotnet.Controllers {
 
 
 
-            [HttpGet ("superadmin/{date}")]  //SHOULD START FROM FIRST OF MONTH
-        public async Task<ActionResult<EarningDashboard>> GetErningDashboardSuperAdmin(DateTime date) {
+            [HttpGet ("superadmin/{datefrom}/{dateto}")]  //SHOULD START FROM FIRST OF MONTH
+        public async Task<ActionResult<EarningDashboard>> GetErningDashboardSuperAdmin(DateTime datefrom, DateTime dateto) {
             var dashboard = new EarningDashboard();
-            var totalOrders =  _db.Orders.Where(x => x.OrderPlacementDate >= date && x.OrderPlacementDate <= date.AddDays(30) &&  x.OrderStatus == OrderStatus.Complete).ToList();
+            var totalOrders =  _db.Orders.Where(x => x.OrderPlacementDate.Date >= datefrom.Date && x.OrderPlacementDate.Date <= dateto.Date &&  x.OrderStatus == OrderStatus.Complete).ToList();
              var totalOrdersCount =  totalOrders.Count();
            if (totalOrders != null)
            {
                  long totalAmount =  0;
             foreach (var order in totalOrders)
             {
-                totalAmount += (order.TotalAmmount - 100);
+                totalAmount += (order.TotalAmmount);
             }
             var shopAmount = (totalAmount - totalAmount * 0.20);
             var companyAmount = (totalAmount - shopAmount);
@@ -54,18 +53,18 @@ namespace dotnet.Controllers {
 
            
         }
-
-          [HttpGet ("shopowner/{id}/{date}")]  //SHOULD START FROM FIRST OF MONTH
+   
+        [HttpGet ("shopowner/{id}/{date}")]  //SHOULD START FROM FIRST OF MONTH
         public async Task<ActionResult<EarningShop>> GetEarningDashboardSuperAdmin(long id , DateTime date) {
             var dashboard = new EarningShop();
-            var totalOrders =  _db.Orders.Where(x => x.OrderPlacementDate >= date && x.OrderPlacementDate <= date.AddDays(30) &&  x.OrderStatus == OrderStatus.Complete && x.ShopId == id).ToList();
+            var totalOrders =  _db.Orders.Include(x=>x.Shop).ThenInclude(x=>x.User).Where(x => x.OrderPlacementDate.Date >= date.Date && x.OrderPlacementDate.Date <= date.AddDays(30).Date &&  x.OrderStatus == OrderStatus.Complete && x.ShopId == id).ToList();
             var totalOrderCount = totalOrders.Count();
            if (totalOrders != null)
            {
             long totalAmount =  0;
             foreach (var order in totalOrders)
             {
-                totalAmount += (order.TotalAmmount - 100);
+                totalAmount += (order.TotalAmmount);
             }
             var shopAmount = (totalAmount - totalAmount * 0.20);
             var companyAmount = (totalAmount - shopAmount);
@@ -81,7 +80,48 @@ namespace dotnet.Controllers {
           return NotFound();
        
         }
+        [HttpGet ("downloadcsv/{datefrom}/{dateto}")] 
+        public IActionResult GenerateReport (DateTime datefrom,DateTime dateto) {
 
+            var ReportList = new List<Report>();
+
+            var ShopOwners = _db.Users.Include("Shops").Where(x=>x.RoleId==2 && x.IsDisabled !=true && x.IsVerified==true).ToList();
+            foreach (var Shopowner in ShopOwners) {
+                foreach (var shop in Shopowner.Shops) {
+                    var totalOrders = _db.Orders.Where(x => x.OrderPlacementDate.Date >= datefrom.Date && x.OrderPlacementDate.Date <= dateto.Date && x.OrderStatus == OrderStatus.Complete && x.ShopId == shop.Id).ToList();
+                    var totalOrderCount = totalOrders.Count();
+                    if (totalOrders != null)
+                    {
+                        long totalAmount = 0;
+                        foreach (var order in totalOrders)
+                        {
+                            totalAmount += (order.TotalAmmount);
+                        }
+                        var shopAmount = (totalAmount - totalAmount * 0.20);
+                        var companyAmount = (totalAmount - shopAmount);
+                        ReportList.Add(new Report
+                        {
+                            ReportFrom = datefrom,
+                            ReportTo = dateto,
+                            ShopOwnerName = Shopowner.FirstName + ' ' + Shopowner.LastName,
+                            ShopName = shop.Name,
+                            AccountNo = shop.AccountNumber + "(" + (shop.AccountType=="Bank"?shop.BankName:shop.AccountType)+ ")",
+                            CompanyPayment = companyAmount,
+                            ShopPayment = shopAmount,
+                            TotalPayment = totalAmount
+                        }) ; 
+                    }
+                }
+            }
+
+            var stream = new MemoryStream ();
+            using (var writeFile = new StreamWriter (stream, Encoding.UTF8, 512, true)) {
+                var csv = new CsvWriter (writeFile, CultureInfo.InvariantCulture);
+                csv.WriteRecords(ReportList);
+            }
+            stream.Position = 0; //reset stream
+            return File (stream, "application/octet-stream", "Report From Date "+datefrom+" To Date "+dateto+".csv");
+        }
         [HttpGet ("dashboard/data")]
         public async Task<ActionResult<Dashboard>> GetDashboardData() {
             var dashboard = new Dashboard();

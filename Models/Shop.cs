@@ -25,6 +25,9 @@ public class Shop
 	public bool? IsVerified { get; set; }
 	public bool? IsDisabled { get; set; }
 	public bool? IsReturnable { get; set; }
+	public string AccountType { get; set; }
+	public string AccountNumber { get; set; }
+	public string BankName { get; set; }
 	public virtual ICollection<Product> Products { get; set; }
 	
 }	

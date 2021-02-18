@@ -26,6 +26,7 @@ namespace dotnet.Models {
         public DbSet<Image> Images { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Bank> Bank { get; set; }
 
         // public DbSet<UserAuthentication> UserAuthentication { get; set; }
         protected override void OnModelCreating (ModelBuilder modelBuilder) {

@@ -24,48 +24,55 @@ using MySql.Data.EntityFrameworkCore;
 using MySql.Data.EntityFrameworkCore.Extensions;
 using Newtonsoft.Json.Serialization;
 using dotnet.Hubs;
-namespace dotnet {
-    public class Startup {
-        public Startup (IConfiguration configuration) {
+namespace dotnet
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices (IServiceCollection services) {
+        public void ConfigureServices(IServiceCollection services)
+        {
             //token 
-            services.AddAuthentication (JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer (option => option.TokenValidationParameters = new TokenValidationParameters {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(option => option.TokenValidationParameters = new TokenValidationParameters
+                {
                     ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Issuer"],
 
-                        IssuerSigningKey = new SymmetricSecurityKey (Encoding.UTF8.GetBytes (Configuration["Jwt:key"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:key"]))
                 });
-            services.AddDbContext<Context> (options => options.UseMySQL (Configuration.GetConnectionString ("DefaultConnection")));
+            services.AddDbContext<Context>(options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             // services.AddDbContext<ApplicationDbContext>();
             services.AddControllers();
-            services.AddSwaggerGen ((options) => {
-                options.SwaggerDoc ("v1", new OpenApiInfo { Title = "myApi", Version = "v1" });
+            services.AddSwaggerGen((options) =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "myApi", Version = "v1" });
             });
-            services.AddCors ();
+            services.AddCors();
             services.AddSignalR();
 
-            services.AddControllersWithViews ()
-                .AddNewtonsoftJson (options =>
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                   options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
             //  services.AddCors(options => options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials().Build()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure (IApplicationBuilder app, IWebHostEnvironment env) {
-            //web sockets
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            //  web sockets
             // app.UseWebSockets ();
             // app.Use (async (context, next) => {
             //     if (context.Request.Path == "/ws") {
@@ -80,44 +87,46 @@ namespace dotnet {
             //     }
 
             // });
-            
+
             // end web sockets
-            app.UseSwagger ();
-            app.UseSwaggerUI (c => {
-                c.SwaggerEndpoint ("/swagger/v1/swagger.json", "My API V1");
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-          
+
             app.UseCors(
                options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
            );
-        
-            
 
-            app.UseStaticFiles ();
-            app.UseStaticFiles (new StaticFileOptions () {
-                FileProvider = new PhysicalFileProvider (Path.Combine (Directory.GetCurrentDirectory (), @"Resources")),
-                    RequestPath = new PathString ("/Resources")
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+                RequestPath = new PathString("/Resources")
             });
 
-            if (env.IsDevelopment ()) {
-                app.UseDeveloperExceptionPage ();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
             }
 
             // app.UseMvc();
-            app.UseHttpsRedirection ();
+            app.UseHttpsRedirection();
 
-            app.UseRouting ();
+            app.UseRouting();
 
-            app.UseAuthorization ();
+            app.UseAuthorization();
 
-            app.UseEndpoints (endpoints => {
-                endpoints.MapControllers ();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
                 endpoints.MapHub<OrderHub>("/orderHub");
             });
-//             app.UseSignalR(routes =>
-// {
-//     routes.MapHub<OrderHub>("/order");
-// });
+            //             app.UseSignalR(routes =>
+            // {
+            //     routes.MapHub<OrderHub>("/order");
+            // });
         }
     }
 }
